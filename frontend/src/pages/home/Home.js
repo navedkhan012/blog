@@ -1,5 +1,6 @@
 import React from "react";
-import MainLayout from "../components/MainLayout";
+import MainLayout from "../../components/MainLayout";
+import Hero from "./container/Hero";
 
 /**
  * @author
@@ -9,7 +10,9 @@ import MainLayout from "../components/MainLayout";
 const Home = (props) => {
   return (
     <div>
-      <MainLayout></MainLayout>
+      <MainLayout>
+        <Hero></Hero>
+      </MainLayout>
     </div>
   );
 };

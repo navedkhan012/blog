@@ -73,7 +73,7 @@ const Header = (props) => {
   };
 
   return (
-    <div>
+    <section className=" sticky left-0 right-0 top-0 z-50 bg-white shadow-lg">
       <header className=" container mx-auto px-5 flex  justify-between py-4 items-center">
         <div>
           <img className="w-16" src={images.logo} alt="logo" />
@@ -105,7 +105,7 @@ const Header = (props) => {
           </button>
         </div>
       </header>
-    </div>
+    </section>
   );
 };
 

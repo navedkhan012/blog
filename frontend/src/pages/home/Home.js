@@ -1,6 +1,7 @@
 import React from "react";
 import MainLayout from "../../components/MainLayout";
 import Hero from "./container/Hero";
+import Articles from "./container/Articles";
 
 /**
  * @author
@@ -12,6 +13,7 @@ const Home = (props) => {
     <div>
       <MainLayout>
         <Hero></Hero>
+        <Articles />
       </MainLayout>
     </div>
   );

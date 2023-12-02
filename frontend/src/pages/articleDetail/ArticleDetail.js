@@ -4,6 +4,7 @@ import Breadcrumbs from "../../components/BreadCurmbs";
 import { images } from "../../constants";
 import { Link } from "react-router-dom";
 import SuggestedPosts from "./conatiner/SuggestedPosts";
+import CommentContainer from "../../components/comments/CommentContainer";
 
 /**
  * @author
@@ -73,6 +74,7 @@ const ArticleDetail = (props) => {
               lectus proin.
             </p>
           </div>
+          <CommentContainer className="mt-10" logginedUserId={"a"} />
         </article>
 
         <SuggestedPosts

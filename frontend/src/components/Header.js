@@ -17,7 +17,6 @@ const navItemInfo = [
 ];
 
 const NavItem = ({ item }) => {
-  console.log("items", item);
   return (
     <li className=" relative group">
       {item.type === "link" ? (
@@ -45,9 +44,10 @@ const NavItem = ({ item }) => {
 
           <div className=" hidden transition-all duration-500 pt-4 absolute bottom-0 right-0 transform translate-y-full group-hover:block w-max">
             <ul className="flex flex-col shadow-lg rounded-lg overflow-hidden">
-              {item.items.map((page) => {
+              {item.items.map((page, index) => {
                 return (
                   <a
+                    key={index}
                     href="/"
                     className=" hover:bg-dark-hard hover:text-white px-4 py-2 text-white lg:bg-dark-soft"
                   >
@@ -96,8 +96,8 @@ const Header = (props) => {
           flex  gap-8 items-center fixed top-0 bottom-0 lg:static  justify-center lg:justify-end`}
         >
           <ul className="flex flex-col lg:flex-row gap-2 font-semibol items-center">
-            {navItemInfo.map((item) => {
-              return <NavItem key={item} item={item} />;
+            {navItemInfo.map((item, index) => {
+              return <NavItem key={item + index} item={item} />;
             })}
           </ul>
           <button className="border-2 border-blue-500 rounded-full px-6 py-2 text-blue-500 font-semibold hover:bg-blue-500  hover:text-white transition-all duration-100">

@@ -7,7 +7,6 @@ import { Link } from "react-router-dom";
  **/
 
 const SuggestedPosts = ({ className, header, posts = [], tags = [] }) => {
-  console.log("posts", posts);
   return (
     <div
       className={` w-full 
@@ -45,13 +44,12 @@ const SuggestedPosts = ({ className, header, posts = [], tags = [] }) => {
         Tags
       </h2>
       <div className="flex flex-wrap gap-x-2 gap-y-2 mt-4">
-        {tags.map((tag) => {
+        {tags.map((tag, index) => {
           return (
             <Link
+              key={index}
               to={"/"}
-              className=" capitalize inline-block rounded-md px-3 py-1.5 bg-primary font-roboto text-xs text-white
-                md:text-sm
-              "
+              className="capitalize inline-block rounded-md px-3 py-1.5 bg-primary font-roboto text-xs text-white md:text-sm"
             >
               {tag}
             </Link>

@@ -5,6 +5,7 @@ import { images } from "../../constants";
 import { Link } from "react-router-dom";
 import SuggestedPosts from "./conatiner/SuggestedPosts";
 import CommentContainer from "../../components/comments/CommentContainer";
+import SocialShareButton from "../../components/SocialShareButton";
 
 /**
  * @author
@@ -76,13 +77,25 @@ const ArticleDetail = (props) => {
           </div>
           <CommentContainer className="mt-10" logginedUserId={"a"} />
         </article>
-
-        <SuggestedPosts
-          header={"Lastest Article"}
-          posts={postsData}
-          tags={tagsData}
-          className={"mt-8 lg:mt-0 max-w-xs"}
-        />
+        <div>
+          <SuggestedPosts
+            header={"Lastest Article"}
+            posts={postsData}
+            tags={tagsData}
+            className={"mt-8 lg:mt-0 max-w-xs"}
+          />
+          <div className="mt-7">
+            <h2 className="font-roboto font-medium text-dark-hard md:text-xl">
+              Share on
+            </h2>
+            <SocialShareButton
+              url={encodeURI(
+                "https://react-icons.github.io/react-icons/search/#q=bin"
+              )}
+              title={encodeURIComponent("Font icon react")}
+            />
+          </div>
+        </div>
       </section>
     </MainLayout>
   );

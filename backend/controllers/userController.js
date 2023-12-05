@@ -8,7 +8,6 @@ export const registerUser = async (req, res) => {
     // Check if the user already exists in the database
     let _user = await User.findOne({ email });
 
-    console.log("user", _user);
     if (_user) {
       // User already exists
       return res.status(400).json({ message: "User already exists" });
@@ -28,7 +27,7 @@ export const registerUser = async (req, res) => {
       email: _user.email,
       verified: _user.verified,
       admin: _user.admin,
-      token: null,
+      token: await _user.generateJWT(),
     });
   } catch (error) {
     // Handle error

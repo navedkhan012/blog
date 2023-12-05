@@ -1,4 +1,10 @@
 import { Schema, model } from "mongoose";
+import { hash } from "bcrypt";
+import jwt from "jsonwebtoken";
+// const bcrypt = require('bcrypt');
+// const saltRounds = 10;
+// const myPlaintextPassword = 's0/\/\P4$$w0rD';
+// const someOtherPlaintextPassword = 'not_bacon';
 
 const UserScema = new Schema(
   {
@@ -34,6 +40,25 @@ const UserScema = new Schema(
   },
   { timestamps: true }
 );
+
+UserScema.pre("save", async function (next) {
+  if (this.isModified("password")) {
+    this.password = await hash(this.password, 10);
+    return next();
+  }
+});
+
+UserScema.methods.generateJWT = async function () {
+  return await jwt.sign(
+    {
+      id: this._id,
+    },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "30d",
+    }
+  );
+};
 
 const User = model("User", UserScema);
 

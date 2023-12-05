@@ -2,9 +2,7 @@ import mongoose from "mongoose";
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(
-      "mongodb+srv://devdizz143:aNKNzKB5arcxVmMg@cluster0.kywv3ba.mongodb.net/?retryWrites=true&w=majority"
-    );
+    await mongoose.connect(process.env.DB_URI);
     console.log("Db is connetred");
   } catch (error) {
     // console.log("Db is connetred");

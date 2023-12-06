@@ -1,6 +1,6 @@
 import User from "../models/User.js";
 
-export const registerUser = async (req, res) => {
+export const registerUser = async (req, res, next) => {
   //   return res.status(200).json({ message: "Internal server error" });
   try {
     const { name, email, password } = req.body;
@@ -10,7 +10,8 @@ export const registerUser = async (req, res) => {
 
     if (_user) {
       // User already exists
-      return res.status(400).json({ message: "User already exists" });
+      // return res.status(400).json({ message: "User already exists" });
+      throw new Error("User already exists");
     }
 
     // Continue with user registration
@@ -32,6 +33,7 @@ export const registerUser = async (req, res) => {
   } catch (error) {
     // Handle error
     console.error(error);
-    res.status(500).json({ message: "Internal server error" });
+    // res.status(500).json({ message: "Internal server error" });
+    next(error);
   }
 };

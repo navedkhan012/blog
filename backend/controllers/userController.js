@@ -1,4 +1,6 @@
+import { uploadPicture } from "../middleware/uploadPictureMiddleware.js";
 import User from "../models/User.js";
+import { fileRemover } from "../utils/fileRemover.js";
 
 export const registerUser = async (req, res, next) => {
   //   return res.status(200).json({ message: "Internal server error" });
@@ -88,3 +90,92 @@ export const userProfile = async (req, res, next) => {
     next(error);
   }
 };
+
+export const updateProfile = async (req, res, next) => {
+  try {
+    let user = await User.findById(req.user._id);
+    if (!user) {
+      throw new Error("user not found");
+    }
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+    if (req.body.password && req.body.password.length < 6) {
+      throw new Error("password length should be 6 digit");
+    } else if (req.body.password) {
+      user.password = req.body.password;
+    }
+
+    const updateUserProfile = await user.save();
+
+    res.json({
+      _id: updateUserProfile._id,
+      avatar: updateUserProfile.avatar,
+      name: updateUserProfile.name,
+      email: updateUserProfile.email,
+      verified: updateUserProfile.verified,
+      admin: updateUserProfile.admin,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateProfilePicture = async (req, res, next) => {
+  try {
+    const upload = uploadPicture.single("profilePicture");
+
+    upload(req, res, async function (err) {
+      console.log("err------->", err);
+      if (err) {
+        console.log("if--------->");
+        const error = new Error("An unknow error occured when uploading");
+        next(error);
+      } else {
+        console.log("req.file.filename else", req.file.filename);
+        if (req.file) {
+          console.log("req.file.fileName------------>", req.file.filename);
+          console.log("req.file------------>", req.file);
+          const updateUser = await User.findByIdAndUpdate(
+            req.user._id,
+            {
+              avatar: req.file.filename,
+            },
+            {
+              new: true,
+            }
+          );
+          res.json({
+            _id: updateUser._id,
+            avatar: updateUser.avatar,
+            name: updateUser.name,
+            email: updateUser.email,
+            verified: updateUser.verified,
+            admin: updateUser.admin,
+            token: await updateUser.generateJWT(),
+          });
+        } else {
+          console.log("esles--------->");
+          let filename;
+          let updateUser = await User.findById(req.user._id);
+          filename = updateUser.avatar;
+          updateUser.avatar = "";
+          await updateUser.save();
+          fileRemover(filename);
+          res.json({
+            _id: updateUser._id,
+            avatar: updateUser.avatar,
+            name: updateUser.name,
+            email: updateUser.email,
+            verified: updateUser.verified,
+            admin: updateUser.admin,
+            token: await updateUser.generateJWT(),
+          });
+        }
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+//25 mint

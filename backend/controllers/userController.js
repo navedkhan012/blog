@@ -44,12 +44,9 @@ export const loginUser = async (req, res, next) => {
 
     let user = await User.findOne({ email });
 
-    // console.log("user", user);
     if (!user) {
       throw new Error("Email not found");
     }
-    // console.log("password", password);
-    // console.log("comparePassword", await user.comparePassword(password));
     if (await user.comparePassword(password)) {
       return res.status(201).json({
         _id: user._id,
@@ -125,16 +122,11 @@ export const updateProfilePicture = async (req, res, next) => {
     const upload = uploadPicture.single("profilePicture");
 
     upload(req, res, async function (err) {
-      console.log("err------->", err);
       if (err) {
-        console.log("if--------->");
         const error = new Error("An unknow error occured when uploading");
         next(error);
       } else {
-        console.log("req.file.filename else", req.file.filename);
         if (req.file) {
-          console.log("req.file.fileName------------>", req.file.filename);
-          console.log("req.file------------>", req.file);
           const updateUser = await User.findByIdAndUpdate(
             req.user._id,
             {
@@ -154,7 +146,6 @@ export const updateProfilePicture = async (req, res, next) => {
             token: await updateUser.generateJWT(),
           });
         } else {
-          console.log("esles--------->");
           let filename;
           let updateUser = await User.findById(req.user._id);
           filename = updateUser.avatar;
@@ -177,5 +168,3 @@ export const updateProfilePicture = async (req, res, next) => {
     next(error);
   }
 };
-
-//25 mint

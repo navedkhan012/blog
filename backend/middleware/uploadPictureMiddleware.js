@@ -1,13 +1,14 @@
 import multer from "multer";
 import path from "path";
 
+const __dirname = path.resolve();
+
 const storage = multer.diskStorage({
-  destination: (req, res, cb) => {
-    cb(null, path.join(__dirname, "../uploads"));
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, "/uploads"));
   },
-  filename: (req, res, cb) => {
-    console.log("file.orignalName------>", file);
-    cb(null, `${Date.now()}-${file.orignalName}`);
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
   },
 });
 export const uploadPicture = multer({
@@ -15,11 +16,11 @@ export const uploadPicture = multer({
   limits: {
     fileSize: 5 * 100000, //5 MB
   },
-  fileFilter: function (req, res, cb) {
-    let ext = path.extname(file.orignalName);
-    if (ext !== ".png" && ext !== ".jpg" && ext !== ".jpeg") {
-      return cb(new Error("Only images are allowed"));
-    }
+  fileFilter: function (req, file, cb) {
+    let ext = path.extname(file.originalname);
+    // if (ext !== ".png" && ext !== ".jpg" && ext !== ".jpeg") {
+    //   return cb(new Error("Only images are allowed"));
+    // }
     cb(null, true);
   },
 });

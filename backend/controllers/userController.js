@@ -127,15 +127,14 @@ export const updateProfilePicture = async (req, res, next) => {
         next(error);
       } else {
         if (req.file) {
-          const updateUser = await User.findByIdAndUpdate(
-            req.user._id,
-            {
-              avatar: req.file.filename,
-            },
-            {
-              new: true,
-            }
-          );
+          let filename;
+          let updateUser = await User.findById(req.user._id);
+          filename = updateUser.avatar;
+          if (filename) {
+            fileRemover(filename);
+          }
+          updateUser.avatar = req.file.filename;
+          await updateUser.save();
           res.json({
             _id: updateUser._id,
             avatar: updateUser.avatar,

@@ -24,9 +24,10 @@ const RegisterPage = (props) => {
     mode: "onChange",
   });
 
-  const submitHandler = () => {
-    alert("yes working from");
+  const submitHandler = (data) => {
+    console.log("data", data);
   };
+  const password = watch("password");
   return (
     <MainLayout>
       <section className=" container mx-auto px-5 py-10">
@@ -34,7 +35,7 @@ const RegisterPage = (props) => {
           <h1 className=" font-roboto text-2xl font-bold text-center text-dark-hard mb-8">
             Sign up
           </h1>
-          <from onSubmit={handleSubmit(submitHandler)}>
+          <form onSubmit={handleSubmit(submitHandler)}>
             <div className="flex flex-col mb-6 w-full">
               <label
                 htmlFor="name"
@@ -58,9 +59,9 @@ const RegisterPage = (props) => {
                 placeholder="Enter name"
                 className=" placeholder:text-[#5a7184] text-dark-hard mt-3 rounded-lg px-5 py-4 font-semibold block outline-none border border-[#c3cad9]"
               />
-              {errors.name.message && (
+              {errors.name?.message && (
                 <p className=" text-red-500 mt-1 text-xs">
-                  {errors.name.message}
+                  {errors.name?.message}
                 </p>
               )}
             </div>
@@ -74,10 +75,25 @@ const RegisterPage = (props) => {
               <input
                 type="text"
                 id="email"
-                {...register("email")}
+                {...register("email", {
+                  pattern: {
+                    value:
+                      /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
+                    message: " email needed",
+                  },
+                  required: {
+                    value: true,
+                    message: "email is required",
+                  },
+                })}
                 placeholder="Enter email"
                 className=" placeholder:text-[#5a7184] text-dark-hard mt-3 rounded-lg px-5 py-4 font-semibold block outline-none border border-[#c3cad9]"
               />
+              {errors.email?.message && (
+                <p className=" text-red-500 mt-1 text-xs">
+                  {errors.email?.message}
+                </p>
+              )}
             </div>
             <div className="flex flex-col mb-6 w-full">
               <label
@@ -89,10 +105,24 @@ const RegisterPage = (props) => {
               <input
                 type="text"
                 id="password"
-                {...register("password")}
+                {...register("password", {
+                  required: {
+                    value: true,
+                    message: "password is required",
+                  },
+                  minLength: {
+                    value: 6,
+                    message: "must be 6 chracter",
+                  },
+                })}
                 placeholder="Enter password"
                 className=" placeholder:text-[#5a7184] text-dark-hard mt-3 rounded-lg px-5 py-4 font-semibold block outline-none border border-[#c3cad9]"
               />
+              {errors.password?.message && (
+                <p className=" text-red-500 mt-1 text-xs">
+                  {errors.password?.message}
+                </p>
+              )}
             </div>
             <div className="flex flex-col mb-6 w-full">
               <label
@@ -104,10 +134,25 @@ const RegisterPage = (props) => {
               <input
                 type="text"
                 id="confirmPassword"
-                {...register("confirmPassword")}
+                {...register("confirmPassword", {
+                  required: {
+                    value: true,
+                    message: "confirm is required",
+                  },
+                  validate: (value) => {
+                    if (value !== password) {
+                      return "password do not match";
+                    }
+                  },
+                })}
                 placeholder="Enter confirm Password"
                 className=" placeholder:text-[#5a7184] text-dark-hard mt-3 rounded-lg px-5 py-4 font-semibold block outline-none border border-[#c3cad9]"
               />
+              {errors.confirmPassword?.message && (
+                <p className=" text-red-500 mt-1 text-xs">
+                  {errors.confirmPassword?.message}
+                </p>
+              )}
             </div>
             <div>
               <Link
@@ -118,7 +163,8 @@ const RegisterPage = (props) => {
               </Link>
               <button
                 type="submit"
-                className="bg-primary text-white font-bold text-lg py-4 px-8 w-full rounded-lg my-6"
+                disabled={!isValid}
+                className="bg-primary text-white font-bold text-lg py-4 px-8 w-full rounded-lg my-6 disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 Register
               </button>
@@ -132,7 +178,7 @@ const RegisterPage = (props) => {
                 </Link>
               </p>
             </div>
-          </from>
+          </form>
         </div>
       </section>
     </MainLayout>

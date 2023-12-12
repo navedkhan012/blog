@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import images from "../../constants/images";
 import { BiMessageSquareDots } from "react-icons/bi";
 import { BiMessageSquareEdit } from "react-icons/bi";

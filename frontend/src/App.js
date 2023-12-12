@@ -3,6 +3,7 @@ import ArticleDetail from "./pages/articleDetail/ArticleDetail";
 import Home from "./pages/home/Home";
 import { Routes, Route } from "react-router-dom";
 import RegisterPage from "./pages/register/RegisterPage";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/blog/:id" element={<ArticleDetail />} />
         <Route path="/register" element={<RegisterPage />} />
       </Routes>
+      <Toaster />
     </div>
   );
 }

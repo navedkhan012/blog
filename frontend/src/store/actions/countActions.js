@@ -1,4 +1,4 @@
-import { countAction } from "../reducers/countReducers";
+import { countAction } from "../reducers/userReducers";
 
 export const changeCount = (type) => (dispatch, getState) => {
   const { count } = getState();

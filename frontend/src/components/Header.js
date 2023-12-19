@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { images } from "../constants";
 import { CiMenuFries, CiSquareRemove } from "react-icons/ci";
 import { GoChevronDown } from "react-icons/go";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../store/actions/user";
 
 /**
  * @author
@@ -33,7 +35,7 @@ const NavItem = ({ item }) => {
           </span>
         </>
       ) : (
-        <>
+        <div>
           <a
             href="/"
             className="px-4 py-2 group-hover:text-green-500 flex gap-x-1 items-center"
@@ -42,14 +44,14 @@ const NavItem = ({ item }) => {
             <GoChevronDown />
           </a>
 
-          <div className=" hidden transition-all duration-500 pt-4 absolute bottom-0 right-0 transform translate-y-full group-hover:block w-max">
+          <div className="hidden transition-all duration-500 pt-4 absolute bottom-0 right-0 transform translate-y-full group-hover:block w-max">
             <ul className="flex flex-col shadow-lg rounded-lg overflow-hidden">
               {item.items.map((page, index) => {
                 return (
                   <a
                     key={index}
                     href="/"
-                    className=" hover:bg-dark-hard hover:text-white px-4 py-2 text-white lg:bg-dark-soft"
+                    className="hover:bg-dark-hard hover:text-white px-4 py-2 text-white lg:bg-dark-soft"
                   >
                     {page}
                   </a>
@@ -57,23 +59,29 @@ const NavItem = ({ item }) => {
               })}
             </ul>
           </div>
-        </>
+        </div>
       )}
     </li>
   );
 };
 
 const Header = (props) => {
+  const dispatch = useDispatch();
   const [navIsvisible, setNavIsvisible] = useState(false);
+  const [profileDropDown, setProfileDropDown] = useState(false);
+  const userState = useSelector((state) => state.user);
 
   const navVisiblityHandler = () => {
     setNavIsvisible((curState) => {
       return !curState;
     });
   };
+  const logoutHanlder = () => {
+    dispatch(logout());
+  };
 
   return (
-    <section className=" sticky left-0 right-0 top-0 z-50 bg-white shadow-lg">
+    <section className="sticky left-0 right-0 top-0 z-50 bg-white shadow-lg">
       <header className=" container mx-auto px-5 flex  justify-between py-4 items-center">
         <div>
           <img className="w-16" src={images.logo} alt="logo" />
@@ -100,9 +108,45 @@ const Header = (props) => {
               return <NavItem key={item + index} item={item} />;
             })}
           </ul>
-          <button className="border-2 border-blue-500 rounded-full px-6 py-2 text-blue-500 font-semibold hover:bg-blue-500  hover:text-white transition-all duration-100">
-            Sign In
-          </button>
+          {userState.userInfo ? (
+            <>
+              <div className="relative">
+                <button
+                  className="px-4 py-2 group-hover:text-green-500 flex gap-x-1 items-center"
+                  onClick={() => setProfileDropDown(!profileDropDown)}
+                >
+                  <span>Profile</span>
+                  <GoChevronDown />
+                </button>
+
+                <div
+                  className={`transition-all duration-500 pt-4 absolute bottom-0 right-0 transform translate-y-full group-hover:block w-max  
+                  ${profileDropDown ? "block" : "hidden"}`}
+                >
+                  <ul className="flex flex-col shadow-lg rounded-lg overflow-hidden w-28">
+                    <button
+                      type="button"
+                      className="hover:bg-dark-hard hover:text-white px-4 py-2 text-white lg:bg-dark-soft"
+                      onClick={logoutHanlder}
+                    >
+                      Dashboard
+                    </button>
+                    <button
+                      type="button"
+                      className="hover:bg-dark-hard hover:text-white px-4 py-2 text-white lg:bg-dark-soft"
+                      onClick={logoutHanlder}
+                    >
+                      Logout
+                    </button>
+                  </ul>
+                </div>
+              </div>
+            </>
+          ) : (
+            <button className="border-2 border-blue-500 rounded-full px-6 py-2 text-blue-500 font-semibold hover:bg-blue-500  hover:text-white transition-all duration-100">
+              Sign In
+            </button>
+          )}
         </div>
       </header>
     </section>

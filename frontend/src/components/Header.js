@@ -4,6 +4,7 @@ import { CiMenuFries, CiSquareRemove } from "react-icons/ci";
 import { GoChevronDown } from "react-icons/go";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../store/actions/user";
+import { useNavigate } from "react-router-dom";
 
 /**
  * @author
@@ -66,6 +67,7 @@ const NavItem = ({ item }) => {
 };
 
 const Header = (props) => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [navIsvisible, setNavIsvisible] = useState(false);
   const [profileDropDown, setProfileDropDown] = useState(false);
@@ -82,7 +84,7 @@ const Header = (props) => {
 
   return (
     <section className="sticky left-0 right-0 top-0 z-50 bg-white shadow-lg">
-      <header className=" container mx-auto px-5 flex  justify-between py-4 items-center">
+      <header className="container mx-auto px-5 flex  justify-between py-4 items-center">
         <div>
           <img className="w-16" src={images.logo} alt="logo" />
         </div>
@@ -143,7 +145,10 @@ const Header = (props) => {
               </div>
             </>
           ) : (
-            <button className="border-2 border-blue-500 rounded-full px-6 py-2 text-blue-500 font-semibold hover:bg-blue-500  hover:text-white transition-all duration-100">
+            <button
+              onClick={() => navigate("/login")}
+              className="border-2 border-blue-500 rounded-full px-6 py-2 text-blue-500 font-semibold hover:bg-blue-500  hover:text-white transition-all duration-100"
+            >
               Sign In
             </button>
           )}

@@ -117,7 +117,7 @@ const Header = (props) => {
                   className="px-4 py-2 group-hover:text-green-500 flex gap-x-1 items-center"
                   onClick={() => setProfileDropDown(!profileDropDown)}
                 >
-                  <span>Profile</span>
+                  <span>Account</span>
                   <GoChevronDown />
                 </button>
 
@@ -126,6 +126,13 @@ const Header = (props) => {
                   ${profileDropDown ? "block" : "hidden"}`}
                 >
                   <ul className="flex flex-col shadow-lg rounded-lg overflow-hidden w-28">
+                    <button
+                      type="button"
+                      className="hover:bg-dark-hard hover:text-white px-4 py-2 text-white lg:bg-dark-soft"
+                      onClick={() => navigate("/profile")}
+                    >
+                      Proile
+                    </button>
                     <button
                       type="button"
                       className="hover:bg-dark-hard hover:text-white px-4 py-2 text-white lg:bg-dark-soft"

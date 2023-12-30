@@ -76,6 +76,7 @@ export const userProfile = async (req, res, next) => {
         email: user.email,
         verified: user.verified,
         admin: user.admin,
+        token: "here",
       });
     } else {
       let error = new Error("user not found");
@@ -111,6 +112,7 @@ export const updateProfile = async (req, res, next) => {
       email: updateUserProfile.email,
       verified: updateUserProfile.verified,
       admin: updateUserProfile.admin,
+      token: await updateUserProfile.generateJWT(),
     });
   } catch (error) {
     next(error);

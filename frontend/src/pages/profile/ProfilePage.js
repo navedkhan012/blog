@@ -3,9 +3,11 @@ import { useForm } from "react-hook-form";
 import MainLayout from "../../components/MainLayout";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useQuery } from "@tanstack/react-query";
-import { getUserProfile } from "../../services/index/users";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getUserProfile, updateProfile } from "../../services/index/users";
 import ProfilePicture from "../../components/ProfilePicture";
+import { userAction } from "../../store/reducers/userReducers";
+import toast from "react-hot-toast";
 
 /**
  * @author
@@ -13,9 +15,10 @@ import ProfilePicture from "../../components/ProfilePicture";
  **/
 
 const ProfilePage = (props) => {
-  const dispatch = useDispatch();
-  const userState = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const queryClinet = useQueryClient();
+  const userState = useSelector((state) => state.user);
   const {
     data: profileData,
     isLoading: profileIsLoading,
@@ -27,6 +30,30 @@ const ProfilePage = (props) => {
       });
     },
     queryKey: ["profile"],
+  });
+
+  const { mutate, isLoading } = useMutation({
+    mutationFn: ({ name, email, password }) => {
+      return updateProfile({
+        token: userState.userInfo.token,
+        userdata: {
+          name,
+          email,
+          password,
+        },
+      });
+    },
+    onSuccess: (data) => {
+      console.log("data from DB", data);
+      dispatch(userAction.setUserInfo(data));
+      localStorage.setItem("account", JSON.stringify(data));
+      queryClinet.invalidateQueries(["profile"]);
+      toast.success("Profile is updated");
+    },
+    onError: (error) => {
+      toast.error(error.message);
+      console.log(error);
+    },
   });
 
   useEffect(() => {
@@ -50,7 +77,10 @@ const ProfilePage = (props) => {
   });
 
   console.log("profileData", profileData);
-  const submitHandler = (data) => {};
+  const submitHandler = (data) => {
+    const { name, email, password } = data;
+    mutate(name, email, password);
+  };
   return (
     <MainLayout>
       <section className=" container mx-auto px-5 py-10">
@@ -58,6 +88,7 @@ const ProfilePage = (props) => {
           <h1 className=" font-roboto text-2xl font-bold text-center text-dark-hard mb-8">
             Profile
           </h1>
+          {userState.userInfo.name}
           <div className=" relative">
             <ProfilePicture avatar={profileData?.avatar} />
           </div>
@@ -126,22 +157,13 @@ const ProfilePage = (props) => {
                 htmlFor="password"
                 className=" text-[#5a7184] font-semibold block"
               >
-                password
+                New password (optional)
               </label>
               <input
                 type="text"
                 id="password"
-                {...register("password", {
-                  required: {
-                    value: true,
-                    message: "password is required",
-                  },
-                  minLength: {
-                    value: 6,
-                    message: "must be 6 chracter",
-                  },
-                })}
-                placeholder="Enter password"
+                {...register("password")}
+                placeholder="Enter new password"
                 className=" placeholder:text-[#5a7184] text-dark-hard mt-3 rounded-lg px-5 py-4 font-semibold block outline-none border border-[#c3cad9]"
               />
               {errors.password?.message && (

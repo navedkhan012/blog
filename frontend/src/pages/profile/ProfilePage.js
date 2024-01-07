@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import MainLayout from "../../components/MainLayout";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUserProfile, updateProfile } from "../../services/index/users";
@@ -32,7 +32,7 @@ const ProfilePage = (props) => {
     queryKey: ["profile"],
   });
 
-  const { mutate, isLoading } = useMutation({
+  const { mutate, isLoading: updateProfileIsLoading } = useMutation({
     mutationFn: ({ name, email, password }) => {
       return updateProfile({
         token: userState.userInfo.token,
@@ -76,7 +76,6 @@ const ProfilePage = (props) => {
     mode: "onChange",
   });
 
-  console.log("profileData", profileData);
   const submitHandler = (data) => {
     const { name, email, password } = data;
     mutate(name, email, password);
@@ -174,18 +173,14 @@ const ProfilePage = (props) => {
             </div>
 
             <div>
-              <Link
-                to="/forget-password"
-                className=" text-sm font-semibold text-primary"
-              >
-                Forgot password?
-              </Link>
               <button
                 type="submit"
-                disabled={!isValid || profileIsLoading}
+                disabled={
+                  !isValid || profileIsLoading || updateProfileIsLoading
+                }
                 className="bg-primary text-white font-bold text-lg py-4 px-8 w-full rounded-lg my-6 disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                Register
+                Update
               </button>
             </div>
           </form>

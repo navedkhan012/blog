@@ -1,7 +1,10 @@
 import express from "express";
+import path from "path";
 import dotenv from "dotenv";
 import connectDB from "./utils/DB.js";
 import { errorHandler, invalidPathHandler } from "./middleware/errorHandler.js";
+
+const __dirname = path.resolve();
 
 // Routes
 import userRoutes from "./routes/userRoutes.js";
@@ -16,6 +19,10 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/users", userRoutes);
+
+// static asssets
+app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
+
 app.use(invalidPathHandler);
 app.use(errorHandler);
 

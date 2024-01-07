@@ -14,7 +14,7 @@ const storage = multer.diskStorage({
 export const uploadPicture = multer({
   storage: storage,
   limits: {
-    fileSize: 5 * 100000, //5 MB
+    fileSize: 8 * 100000, //5 MB
   },
   fileFilter: function (req, file, cb) {
     let ext = path.extname(file.originalname);

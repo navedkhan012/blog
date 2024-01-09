@@ -4,7 +4,7 @@ import { CiMenuFries, CiSquareRemove } from "react-icons/ci";
 import { GoChevronDown } from "react-icons/go";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../store/actions/user";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 /**
  * @author
@@ -12,11 +12,24 @@ import { useNavigate } from "react-router-dom";
  **/
 
 const navItemInfo = [
-  { name: "Home", type: "link" },
-  { name: "Article", type: "link" },
-  { name: "Page", type: "dropdown", items: ["About", "Contact us"] },
-  { name: "Pricing", type: "link" },
-  { name: "Faq", type: "link" },
+  { name: "Home", type: "link", href: "/" },
+  { name: "Articles", type: "link", href: "/articles" },
+  {
+    name: "Page",
+    type: "dropdown",
+    items: [
+      {
+        title: "About",
+        href: "/about",
+      },
+      {
+        title: "Contact us",
+        href: "/contact",
+      },
+    ],
+  },
+  { name: "Pricing", type: "link", href: "/pricing" },
+  { name: "Faq", type: "link", href: "/faq" },
 ];
 
 const NavItem = ({ item }) => {
@@ -24,9 +37,9 @@ const NavItem = ({ item }) => {
     <li className=" relative group">
       {item.type === "link" ? (
         <>
-          <a href="/" className="px-4 py-2 group-hover:text-green-500">
+          <Link to={item.href} className="px-4 py-2 group-hover:text-green-500">
             {item.name}
-          </a>
+          </Link>
 
           <span
             className="text-blue-500 absolute transition-all duration-500 font-bold right-0 top-0  
@@ -49,13 +62,13 @@ const NavItem = ({ item }) => {
             <ul className="flex flex-col shadow-lg rounded-lg overflow-hidden">
               {item.items.map((page, index) => {
                 return (
-                  <a
+                  <Link
                     key={index}
-                    href="/"
+                    to={page.href}
                     className="hover:bg-dark-hard hover:text-white px-4 py-2 text-white lg:bg-dark-soft"
                   >
-                    {page}
-                  </a>
+                    {page.title}
+                  </Link>
                 );
               })}
             </ul>
@@ -85,9 +98,9 @@ const Header = (props) => {
   return (
     <section className="sticky left-0 right-0 top-0 z-50 bg-white shadow-lg">
       <header className="container mx-auto px-5 flex  justify-between py-4 items-center">
-        <div>
+        <Link to="/">
           <img className="w-16" src={images.logo} alt="logo" />
-        </div>
+        </Link>
         <div className="z-50 lg:hidden block">
           {navIsvisible ? (
             <CiSquareRemove className="w-6 h-6" onClick={navVisiblityHandler} />

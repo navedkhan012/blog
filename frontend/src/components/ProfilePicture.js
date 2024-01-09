@@ -3,12 +3,21 @@ import { createPortal } from "react-dom";
 import { stables } from "../constants/index";
 import { HiOutlineCamera } from "react-icons/hi";
 import CropEasy from "./crop/CropEasy";
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { updateProfilePicture } from "../services/index/users";
+import { userAction } from "../store/reducers/userReducers";
 /**
  * @author
  * @function ProfilePicture
  **/
 
 const ProfilePicture = ({ avatar }) => {
+  const queryClinet = useQueryClient();
+  const dispatch = useDispatch();
+  const userState = useSelector((state) => state.user);
+
   const [openCrop, setOpenCrop] = useState(false);
   const [photo, setPhoto] = useState(null);
 
@@ -21,6 +30,45 @@ const ProfilePicture = ({ avatar }) => {
       file: file,
     });
     setOpenCrop(true);
+  };
+
+  const { mutate, isLoading } = useMutation({
+    mutationFn: ({ token, formData }) => {
+      return updateProfilePicture({
+        token: token,
+        formData,
+      });
+    },
+    onSuccess: (data) => {
+      console.log("data from DB", data);
+      dispatch(userAction.setUserInfo(data));
+      setOpenCrop(false);
+      localStorage.setItem("account", JSON.stringify(data));
+      queryClinet.invalidateQueries(["profile"]);
+      toast.success("Profile photo is removed");
+    },
+    onError: (error) => {
+      toast.error(error.message);
+      console.log(error);
+    },
+  });
+
+  const handleDeleteImage = () => {
+    if (window.confirm("Do you want to remove profile picture")) {
+      try {
+        const formData = new FormData();
+
+        formData.append("profilePicture", undefined);
+
+        mutate({
+          token: userState.userInfo.token,
+          formData,
+        });
+      } catch (error) {
+        console.log("error found on profilepicture");
+        toast.error(error.message);
+      }
+    }
   };
 
   return (
@@ -58,6 +106,7 @@ const ProfilePicture = ({ avatar }) => {
           />
         </div>
         <button
+          onClick={handleDeleteImage}
           type="button"
           className="border border-red-500 rounded-lg px-4 py-2  text-red-500"
         >

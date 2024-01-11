@@ -11,13 +11,23 @@ export const authGuard = async (req, res, next) => {
       req.user = await User.findById(id).select("-password");
       next();
     } catch (error) {
-      let err = new Error("Not authorized token failed");
+      let err = new Error("authGuard authorized token failed");
       err.stausCode = 401;
       next(err);
     }
   } else {
     let error = new Error("Not authrozxtion, no token");
     error.stausCode = 401;
+    next(error);
+  }
+};
+
+export const adminGuard = async (req, res, next) => {
+  if (req.user && req.user.admin) {
+    next();
+  } else {
+    let error = new Error("adminGuard authorized as admin");
+    error.statusCode = 401;
     next(error);
   }
 };

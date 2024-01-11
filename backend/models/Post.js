@@ -21,7 +21,7 @@ const PostSchema = new Schema(
     },
     photo: {
       type: String,
-      required: true,
+      required: false,
     },
     user: {
       type: Schema.Types.ObjectId,
@@ -30,7 +30,7 @@ const PostSchema = new Schema(
     tags: {
       type: [String],
     },
-    category: [
+    categories: [
       {
         type: Schema.Types.ObjectId,
         ref: "PostCategorires",

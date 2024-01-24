@@ -1,5 +1,5 @@
 import React from "react";
-import { images } from "../constants";
+import { images, stables } from "../constants";
 import { FaCheck } from "react-icons/fa6";
 
 /**
@@ -13,7 +13,11 @@ const ArticleCard = ({ className, post }) => {
       className={`rounded-xl shadow-[rgba(50,50,93,0.25)_0px_6px_12px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px]  overflow-hidden ${className}`}
     >
       <img
-        src={images.post1}
+        src={
+          post.photo
+            ? stables.UPLOAD_FOLDER_BASE_URL + post.photo
+            : images.post1
+        }
         alt="post 1"
         className="w-full object-cover object-center h-auto"
       />

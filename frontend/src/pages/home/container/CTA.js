@@ -18,8 +18,8 @@ const CTA = (props) => {
       >
         <path
           id="Wave"
-          fill-rule="evenodd"
-          clip-rule="evenodd"
+          fillRule="evenodd"
+          clipRule="evenodd"
           d="M1656 262.5H-504V0C-144 80 216 120 576 120C936 120 1296 80 1656 0V262.5Z"
           fill="#0D2436"
         />

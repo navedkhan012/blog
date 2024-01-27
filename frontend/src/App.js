@@ -12,7 +12,7 @@ function App() {
     <div className="font-opensans">
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/blog/:id" element={<ArticleDetail />} />
+        <Route path="/blog/:slug" element={<ArticleDetail />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/profile" element={<ProfilePage />} />

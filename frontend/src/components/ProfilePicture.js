@@ -22,7 +22,7 @@ const ProfilePicture = ({ avatar }) => {
   const [photo, setPhoto] = useState(null);
 
   const handleFileChange = (e) => {
-    console.log(e.target.files[0]);
+    // console.log(e.target.files[0]);
     const file = e.target.files[0];
 
     setPhoto({
@@ -40,7 +40,7 @@ const ProfilePicture = ({ avatar }) => {
       });
     },
     onSuccess: (data) => {
-      console.log("data from DB", data);
+      // console.log("data from DB", data);
       dispatch(userAction.setUserInfo(data));
       setOpenCrop(false);
       localStorage.setItem("account", JSON.stringify(data));

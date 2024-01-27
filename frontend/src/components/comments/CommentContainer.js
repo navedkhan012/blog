@@ -13,7 +13,7 @@ const CommentContainer = ({ className, logginedUserId }) => {
   const mainCommnets = comments.filter((comment) => comment.parent === null);
   const [affectedComment, setAffectedComment] = useState(null);
 
-  console.log("comments", comments);
+  // console.log("comments", comments);
   useEffect(() => {
     (async () => {
       const commentData = await getCommentsData();
@@ -58,7 +58,7 @@ const CommentContainer = ({ className, logginedUserId }) => {
     const updateComments = comments.filter(
       (comment) => comment._id !== commentId
     );
-    console.log("updateComment", updateComments);
+    // console.log("updateComment", updateComments);
     setComments(updateComments);
   };
 

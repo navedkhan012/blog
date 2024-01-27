@@ -36,7 +36,7 @@ const Comment = ({
   const repliedCommentId = parentId ? parentId : comment._id;
   const replyOnUserId = comment.user._id;
 
-  console.log("replies", replies);
+  // console.log("replies", replies);
   return (
     <div className="flex flex-nowrap items-start gap-x-3 bg-[#F2F4F5] p-4 rounded-lg">
       <img

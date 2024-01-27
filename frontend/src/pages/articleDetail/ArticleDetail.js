@@ -9,7 +9,7 @@ import CommentContainer from "../../components/comments/CommentContainer";
 import SocialShareButton from "../../components/SocialShareButton";
 import { getSinglePost } from "../../services/index/posts";
 
-import { generateJSON, generateHTML } from "@tiptap/html";
+import { generateHTML } from "@tiptap/html";
 
 import toast from "react-hot-toast";
 import Bold from "@tiptap/extension-bold";
@@ -19,6 +19,8 @@ import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
 import Italic from "@tiptap/extension-italic";
 import parse from "html-react-parser";
+import ArticleDetailSkeleton from "./components/ArticleDetailSkeleton";
+import ErrorMessage from "../../components/ErrorMessage";
 
 /**
  * @author
@@ -42,46 +44,12 @@ const postsData = [
 
 const tagsData = ["one", "two"];
 
-const html = "<p>Example <strong>Text</strong></p>";
-
-const json = {
-  type: "doc",
-  content: [
-    {
-      type: "paragraph",
-      content: [
-        {
-          type: "text",
-          text: "Wow, this editor instance exports its content as JSON",
-        },
-      ],
-    },
-    {
-      type: "paragraph",
-      content: [
-        {
-          type: "text",
-          marks: [
-            {
-              type: "bold",
-            },
-            {
-              type: "italic",
-            },
-          ],
-          text: "this is a bold text",
-        },
-      ],
-    },
-  ],
-};
-
 const ArticleDetail = (props) => {
   const { slug } = useParams();
   const [breadcrumbsData, setBreadcrumbsData] = useState([]);
   const [body, setBody] = useState(null);
 
-  const { data } = useQuery({
+  const { data, isError, isLoading } = useQuery({
     queryFn: () => getSinglePost({ slug }),
     queryKey: ["blog", slug],
     onSuccess: (data) => {
@@ -124,20 +92,26 @@ const ArticleDetail = (props) => {
 
   return (
     <MainLayout>
-      <section className=" container mx-auto max-w-5xl flex flex-col px-5 py-5 lg:flex-row lg:gap-x-5 lg:items-start">
-        <article className="flex-1">
-          <Breadcrumbs data={breadcrumbsData} />
-          <img
-            src={
-              data?.photo
-                ? stables.UPLOAD_FOLDER_BASE_URL + data?.photo
-                : images.post2
-            }
-            alt="article"
-            className=" rounded-xl w-full"
-          />
-          <div>
-            {/* {data.categories.map((category) => {
+      {isLoading ? (
+        <ArticleDetailSkeleton />
+      ) : isError ? (
+        <ErrorMessage message={"detail api data not work"} />
+      ) : (
+        <>
+          <section className=" container mx-auto max-w-5xl flex flex-col px-5 py-5 lg:flex-row lg:gap-x-5 lg:items-start">
+            <article className="flex-1">
+              <Breadcrumbs data={breadcrumbsData} />
+              <img
+                src={
+                  data?.photo
+                    ? stables.UPLOAD_FOLDER_BASE_URL + data?.photo
+                    : images.post2
+                }
+                alt="article"
+                className=" rounded-xl w-full"
+              />
+              <div>
+                {/* {data.categories.map((category) => {
               return (
                 <Link
                   to={`blog?category?=${category.name}`}
@@ -147,36 +121,40 @@ const ArticleDetail = (props) => {
                 </Link>
               );
             })} */}
-          </div>
-          {/* 35 video 16 mint */}
-          <h1 className="text-xl font-medium font-roboto mt-4 text-dark-hard md:text-[26px]">
-            {data?.title}
-          </h1>
-          <div className="mt-4 text-dark-soft">
-            <div className="leading-7 prose prose-sm sm:prose-base">{body}</div>
-          </div>
-          <CommentContainer className="mt-10" logginedUserId={"a"} />
-        </article>
-        <div>
-          <SuggestedPosts
-            header={"Lastest Article"}
-            posts={postsData}
-            tags={tagsData}
-            className={"mt-8 lg:mt-0 max-w-xs"}
-          />
-          <div className="mt-7">
-            <h2 className="font-roboto font-medium text-dark-hard md:text-xl">
-              Share on
-            </h2>
-            <SocialShareButton
-              url={encodeURI(
-                "https://react-icons.github.io/react-icons/search/#q=bin"
-              )}
-              title={encodeURIComponent("Font icon react")}
-            />
-          </div>
-        </div>
-      </section>
+              </div>
+              {/* 35 video 16 mint */}
+              <h1 className="text-xl font-medium font-roboto mt-4 text-dark-hard md:text-[26px]">
+                {data?.title}
+              </h1>
+              <div className="mt-4 text-dark-soft">
+                <div className="leading-7 prose prose-sm sm:prose-base">
+                  {body}
+                </div>
+              </div>
+              <CommentContainer className="mt-10" logginedUserId={"a"} />
+            </article>
+            <div>
+              <SuggestedPosts
+                header={"Lastest Article"}
+                posts={postsData}
+                tags={tagsData}
+                className={"mt-8 lg:mt-0 max-w-xs"}
+              />
+              <div className="mt-7">
+                <h2 className="font-roboto font-medium text-dark-hard md:text-xl">
+                  Share on
+                </h2>
+                <SocialShareButton
+                  url={encodeURI(
+                    "https://react-icons.github.io/react-icons/search/#q=bin"
+                  )}
+                  title={encodeURIComponent("Font icon react")}
+                />
+              </div>
+            </div>
+          </section>
+        </>
+      )}
     </MainLayout>
   );
 };

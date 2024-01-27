@@ -4,6 +4,7 @@ import { BiMessageSquareDots } from "react-icons/bi";
 import { BiMessageSquareEdit } from "react-icons/bi";
 import { RiDeleteBin4Line } from "react-icons/ri";
 import CommentForm from "./CommentForm";
+import { stables } from "../../constants";
 
 /**
  * @author
@@ -36,11 +37,15 @@ const Comment = ({
   const repliedCommentId = parentId ? parentId : comment._id;
   const replyOnUserId = comment.user._id;
 
-  // console.log("replies", replies);
+  console.log("comment", comment);
   return (
     <div className="flex flex-nowrap items-start gap-x-3 bg-[#F2F4F5] p-4 rounded-lg">
       <img
-        src={images.postProfileImage}
+        src={
+          comment?.user?.avatar
+            ? stables.UPLOAD_FOLDER_BASE_URL + comment.user.avatar
+            : images.postProfileImage
+        }
         alt="user profile"
         className="w-9 h-9 object-cover rounded-lg"
       />

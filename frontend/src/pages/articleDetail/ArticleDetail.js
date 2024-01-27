@@ -21,6 +21,7 @@ import Italic from "@tiptap/extension-italic";
 import parse from "html-react-parser";
 import ArticleDetailSkeleton from "./components/ArticleDetailSkeleton";
 import ErrorMessage from "../../components/ErrorMessage";
+import { useSelector } from "react-redux";
 
 /**
  * @author
@@ -46,9 +47,13 @@ const tagsData = ["one", "two"];
 
 const ArticleDetail = (props) => {
   const { slug } = useParams();
+  const userState = useSelector((state) => state.user);
   const [breadcrumbsData, setBreadcrumbsData] = useState([]);
   const [body, setBody] = useState(null);
 
+  console.log("userState", userState);
+
+  // api part
   const { data, isError, isLoading } = useQuery({
     queryFn: () => getSinglePost({ slug }),
     queryKey: ["blog", slug],
@@ -111,18 +116,17 @@ const ArticleDetail = (props) => {
                 className=" rounded-xl w-full"
               />
               <div>
-                {/* {data.categories.map((category) => {
-              return (
-                <Link
-                  to={`blog?category?=${category.name}`}
-                  className="text-primary text-sm font-roboto inline-block mt-4 md:text-base mr-4"
-                >
-                  {category.name}
-                </Link>
-              );
-            })} */}
+                {data.categories.map((category) => {
+                  return (
+                    <Link
+                      to={`blog?category?=${category.name}`}
+                      className="text-primary text-sm font-roboto inline-block mt-4 md:text-base mr-4"
+                    >
+                      {category.name}
+                    </Link>
+                  );
+                })}
               </div>
-              {/* 35 video 16 mint */}
               <h1 className="text-xl font-medium font-roboto mt-4 text-dark-hard md:text-[26px]">
                 {data?.title}
               </h1>
@@ -131,7 +135,11 @@ const ArticleDetail = (props) => {
                   {body}
                 </div>
               </div>
-              <CommentContainer className="mt-10" logginedUserId={"a"} />
+              <CommentContainer
+                comments={data?.comments}
+                className="mt-10"
+                logginedUserId={userState?.info?._id}
+              />
             </article>
             <div>
               <SuggestedPosts

@@ -139,6 +139,7 @@ const ArticleDetail = (props) => {
                 comments={data?.comments}
                 className="mt-10"
                 logginedUserId={userState?.info?._id}
+                postSlug={slug}
               />
             </article>
             <div>

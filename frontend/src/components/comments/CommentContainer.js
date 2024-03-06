@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import CommentForm from "./CommentForm";
 import { useSelector } from "react-redux";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import Comment from "./Comment";
-import { createNewComment } from "../../services/index/comments";
+import { createNewComment, updateComment } from "../../services/index/comments";
 import toast from "react-hot-toast";
 /**
  * @author
@@ -17,12 +17,9 @@ const CommentContainer = ({
   comments,
   postSlug,
 }) => {
+  const queryClient = useQueryClient();
   const [affectedComment, setAffectedComment] = useState(null);
   const userState = useSelector((state) => state.user);
-
-  const updateCommentHandler = (value, commentId) => {
-    setAffectedComment(null);
-  };
 
   const { mutate: mutateNewComment, isLoading: isLoadingNewComment } =
     useMutation({
@@ -40,6 +37,22 @@ const CommentContainer = ({
       },
     });
 
+  const { mutate: mutateUpdateComment, isLoading: isLoadingUpdateComment } =
+    useMutation({
+      mutationFn: ({ token, desc, commentId }) => {
+        console.log("mutateUpdateComment commentId", commentId);
+        return updateComment({ token, desc, commentId });
+      },
+      onSuccess: () => {
+        toast.success("your comment sent suceesfully updated.");
+        queryClient.invalidateQueries(["blog", postSlug]);
+      },
+      onError: (error) => {
+        console.log(error);
+        toast.error(error.message);
+      },
+    });
+
   const addCommentHandler = (value, parent = null, replyOnuser = null) => {
     mutateNewComment({
       desc: value,
@@ -47,6 +60,15 @@ const CommentContainer = ({
       replyOnuser,
       token: userState.userInfo.token,
       slug: postSlug,
+    });
+    setAffectedComment(null);
+  };
+  const updateCommentHandler = (value, commentId) => {
+    console.log("commentId", commentId);
+    mutateUpdateComment({
+      token: userState.userInfo.token,
+      desc: value,
+      commentId,
     });
     setAffectedComment(null);
   };

@@ -163,8 +163,6 @@ export const getAllPost = async (req, res, next) => {
       select: ["avatar", "name", "verified"],
     });
 
-    console.log("posts", posts);
-
     if (!posts) {
       const error = new Error("Post was not found");
       return next(error);

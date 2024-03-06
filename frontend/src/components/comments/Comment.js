@@ -37,7 +37,8 @@ const Comment = ({
   const repliedCommentId = parentId ? parentId : comment._id;
   const replyOnUserId = comment.user._id;
 
-  console.log("comment", comment);
+  console.log("comment._id", comment._id);
+
   return (
     <div className="flex flex-nowrap items-start gap-x-3 bg-[#F2F4F5] p-4 rounded-lg">
       <img
@@ -66,51 +67,50 @@ const Comment = ({
         )}
 
         {isEditing && (
-          <CommentForm
-            btnLabel={"update"}
-            formSubmitHadler={(value) => updateComment(value, comment._id)}
-            formCancelHandler={() => setAffectedComment(null)}
-            initialText={comment.desc}
-          />
+          <div>
+            this is edit
+            <CommentForm
+              btnLabel={"update"}
+              formSubmitHadler={(value) => updateComment(value, comment._id)}
+              formCancelHandler={() => setAffectedComment(null)}
+              initialText={comment.desc}
+            />
+          </div>
         )}
         <div className="flex items-center gap-x-3 text-dark-light font-roboto text-sm mt-3 md-3">
-          {isUserLoggedined && (
+          <button
+            className=" flex items-center space-x-2"
+            onClick={() =>
+              setAffectedComment({
+                type: "replaying",
+                _id: comment._id,
+              })
+            }
+          >
+            <BiMessageSquareDots className=" w-4 h-auto" />
+            <span>reply</span>
+          </button>
+          <>
             <button
               className=" flex items-center space-x-2"
               onClick={() =>
                 setAffectedComment({
-                  type: "replaying",
+                  type: "editing",
                   _id: comment._id,
                 })
               }
             >
-              <BiMessageSquareDots className=" w-4 h-auto" />
-              <span>reply</span>
+              <BiMessageSquareEdit className=" w-4 h-auto" />
+              <span>Edit</span>
             </button>
-          )}
-          {commentBelogsToUser && (
-            <>
-              <button
-                className=" flex items-center space-x-2"
-                onClick={() =>
-                  setAffectedComment({
-                    type: "editing",
-                    _id: comment._id,
-                  })
-                }
-              >
-                <BiMessageSquareEdit className=" w-4 h-auto" />
-                <span>Edit</span>
-              </button>
-              <button
-                className=" flex items-center space-x-2"
-                onClick={() => deleteComment(comment._id)}
-              >
-                <RiDeleteBin4Line className=" w-4 h-auto" />
-                <span>Delete</span>
-              </button>
-            </>
-          )}
+            <button
+              className=" flex items-center space-x-2"
+              onClick={() => deleteComment(comment._id)}
+            >
+              <RiDeleteBin4Line className=" w-4 h-auto" />
+              <span>Delete</span>
+            </button>
+          </>
         </div>
         <div className="mt-2">
           {isReplying && (

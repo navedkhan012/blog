@@ -51,8 +51,6 @@ const ArticleDetail = (props) => {
   const [breadcrumbsData, setBreadcrumbsData] = useState([]);
   const [body, setBody] = useState(null);
 
-  console.log("userState", userState);
-
   // api part
   const { data, isError, isLoading } = useQuery({
     queryFn: () => getSinglePost({ slug }),
@@ -103,7 +101,7 @@ const ArticleDetail = (props) => {
         <ErrorMessage message={"detail api data not work"} />
       ) : (
         <>
-          <section className=" container mx-auto max-w-5xl flex flex-col px-5 py-5 lg:flex-row lg:gap-x-5 lg:items-start">
+          <section className="container mx-auto max-w-5xl flex flex-col px-5 py-5 lg:flex-row lg:gap-x-5 lg:items-start">
             <article className="flex-1">
               <Breadcrumbs data={breadcrumbsData} />
               <img

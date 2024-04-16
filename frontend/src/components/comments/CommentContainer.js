@@ -4,7 +4,11 @@ import { useSelector } from "react-redux";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import Comment from "./Comment";
-import { createNewComment, updateComment } from "../../services/index/comments";
+import {
+  createNewComment,
+  updateComment,
+  deleteComment,
+} from "../../services/index/comments";
 import toast from "react-hot-toast";
 /**
  * @author
@@ -40,11 +44,25 @@ const CommentContainer = ({
   const { mutate: mutateUpdateComment, isLoading: isLoadingUpdateComment } =
     useMutation({
       mutationFn: ({ token, desc, commentId }) => {
-        console.log("mutateUpdateComment commentId", commentId);
         return updateComment({ token, desc, commentId });
       },
       onSuccess: () => {
         toast.success("your comment sent suceesfully updated.");
+        queryClient.invalidateQueries(["blog", postSlug]);
+      },
+      onError: (error) => {
+        console.log(error);
+        toast.error(error.message);
+      },
+    });
+
+  const { mutate: mutateDeleteComment, isLoading: isLoadingDeleteComment } =
+    useMutation({
+      mutationFn: ({ token, commentId }) => {
+        return deleteComment({ token, commentId });
+      },
+      onSuccess: () => {
+        toast.success("your comment is  suceesfully deleted.");
         queryClient.invalidateQueries(["blog", postSlug]);
       },
       onError: (error) => {
@@ -64,7 +82,6 @@ const CommentContainer = ({
     setAffectedComment(null);
   };
   const updateCommentHandler = (value, commentId) => {
-    console.log("commentId", commentId);
     mutateUpdateComment({
       token: userState.userInfo.token,
       desc: value,
@@ -73,7 +90,12 @@ const CommentContainer = ({
     setAffectedComment(null);
   };
 
-  const deleteCommentHandler = (commentId) => {};
+  const deleteCommentHandler = (commentId) => {
+    mutateDeleteComment({
+      token: userState.userInfo.token,
+      commentId,
+    });
+  };
 
   return (
     <div className={`${className} `}>

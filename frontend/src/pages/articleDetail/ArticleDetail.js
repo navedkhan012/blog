@@ -7,7 +7,6 @@ import { useQuery } from "@tanstack/react-query";
 import SuggestedPosts from "./conatiner/SuggestedPosts";
 import CommentContainer from "../../components/comments/CommentContainer";
 import SocialShareButton from "../../components/SocialShareButton";
-import { getSinglePost } from "../../services/index/posts";
 
 import { generateHTML } from "@tiptap/html";
 
@@ -22,28 +21,30 @@ import parse from "html-react-parser";
 import ArticleDetailSkeleton from "./components/ArticleDetailSkeleton";
 import ErrorMessage from "../../components/ErrorMessage";
 import { useSelector } from "react-redux";
-
+// import { getAllPosts } from "/frontend/src/services/index/posts.js";
+// import { getAllPosts, getSinglePost } from "../../services/index/posts.js";
+import { getAllPosts, getSinglePost } from "../../services/index/posts";
 /**
  * @author
  * @function ArticleDetail
  **/
 
-const postsData = [
-  {
-    _id: "1",
-    image: images.post2,
-    title: "Help children get better education",
-    createAt: "Jun 27, 2022",
-  },
-  {
-    _id: "2",
-    image: images.post2,
-    title: "2 Help children get better education",
-    createAt: "Jun 27, 2022",
-  },
-];
+// const postsDataOld = [
+//   {
+//     _id: "1",
+//     image: images.post2,
+//     title: "Help children get better education",
+//     createAt: "Jun 27, 2022",
+//   },
+//   {
+//     _id: "2",
+//     image: images.post2,
+//     title: "2 Help children get better education",
+//     createAt: "Jun 27, 2022",
+//   },
+// ];
 
-const tagsData = ["one", "two"];
+// const tagsData = ["one", "two"];
 
 const ArticleDetail = (props) => {
   const { slug } = useParams();
@@ -51,7 +52,6 @@ const ArticleDetail = (props) => {
   const [breadcrumbsData, setBreadcrumbsData] = useState([]);
   const [body, setBody] = useState(null);
 
-  // api part
   const { data, isError, isLoading } = useQuery({
     queryFn: () => getSinglePost({ slug }),
     queryKey: ["blog", slug],
@@ -93,6 +93,13 @@ const ArticleDetail = (props) => {
     },
   });
 
+  const { data: postData } = useQuery({
+    queryFn: () => getAllPosts({ slug }),
+    queryKey: ["posts"],
+  });
+
+  console.log("postData", postData);
+  console.log("data", data);
   return (
     <MainLayout>
       {isLoading ? (
@@ -143,8 +150,8 @@ const ArticleDetail = (props) => {
             <div>
               <SuggestedPosts
                 header={"Lastest Article"}
-                posts={postsData}
-                tags={tagsData}
+                posts={postData}
+                tags={data?.tags}
                 className={"mt-8 lg:mt-0 max-w-xs"}
               />
               <div className="mt-7">

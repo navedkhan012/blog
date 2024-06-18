@@ -95,6 +95,7 @@ const Header = (props) => {
     dispatch(logout());
   };
 
+  console.log("userState?.userInfo", userState?.userInfo?.admin);
   return (
     <section className="sticky left-0 right-0 top-0 z-50 bg-white shadow-lg">
       <header className="container mx-auto px-5 flex  justify-between py-4 items-center">
@@ -139,6 +140,15 @@ const Header = (props) => {
                   ${profileDropDown ? "block" : "hidden"}`}
                 >
                   <ul className="flex flex-col shadow-lg rounded-lg overflow-hidden w-28">
+                    {userState?.userInfo?.admin && (
+                      <button
+                        type="button"
+                        className="hover:bg-dark-hard hover:text-white px-4 py-2 text-white lg:bg-dark-soft"
+                        onClick={() => navigate("/admin")}
+                      >
+                        Admin Dashboard
+                      </button>
+                    )}
                     <button
                       type="button"
                       className="hover:bg-dark-hard hover:text-white px-4 py-2 text-white lg:bg-dark-soft"
@@ -146,13 +156,7 @@ const Header = (props) => {
                     >
                       Proile
                     </button>
-                    <button
-                      type="button"
-                      className="hover:bg-dark-hard hover:text-white px-4 py-2 text-white lg:bg-dark-soft"
-                      onClick={logoutHanlder}
-                    >
-                      Dashboard
-                    </button>
+
                     <button
                       type="button"
                       className="hover:bg-dark-hard hover:text-white px-4 py-2 text-white lg:bg-dark-soft"

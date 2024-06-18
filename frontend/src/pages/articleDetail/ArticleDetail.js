@@ -96,10 +96,12 @@ const ArticleDetail = (props) => {
   const { data: postData } = useQuery({
     queryFn: () => getAllPosts({ slug }),
     queryKey: ["posts"],
+    onError: (error) => {
+      console.log("error", error);
+      toast.error(error.message);
+    },
   });
 
-  console.log("postData", postData);
-  console.log("data", data);
   return (
     <MainLayout>
       {isLoading ? (
